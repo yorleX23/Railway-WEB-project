@@ -24,5 +24,5 @@ export function Home() {
                 <TrainCard key={train.id} train={train} />
             ))}
         </div>
-    )
+    );
 }
