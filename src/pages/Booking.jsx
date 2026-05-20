@@ -2,10 +2,13 @@ import { useState, useEffect, use } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import SeatMap from '../components/SeatMap';
+import WagonSelector from '../components/WagonSelector';
 
-export function Booking() {
+export default function Booking() {
   const { trainId } = useParams();
   const navigate = useNavigate();
+
+  const [selectedWagon, setSelectedWagon] = useState(1);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [bookedSeats, setBookedSeats] = useState([]);
   const [formData, setFormData] = useState({ name: '', phone: '', email: '' });
