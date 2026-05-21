@@ -95,28 +95,53 @@ h1, h2, h3 {
   transition: background-color 0.2s;
 }
 
-.btn-primary:hover {
-  background-color: var(--primary-hover);
+/* Кнопка "Назад" */
+.btn-back {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 15px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-back:hover {
+  background: var(--primary);
+  color: white;
 }
 
 /* Контейнер сторінки бронювання */
+
 .booking-layout {
   display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
+  gap: 30px;
+  flex-wrap: wrap; /* Дозволяє переносити форму на новий рядок на телефонах */
   margin-top: 20px;
+  justify-content: center; /* Центруємо на мобільних */
+  align-items: flex-start; /* ВАЖЛИВО: щоб форма не розтягувалася вниз на ПК */
 }
-
 /* Карта місць */
 .seat-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
+  width: 100%;
+}
+
+/* Обгортка для центрування карти місць */
+.seat-map-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Центруємо вміст на мобільних */
+  width: 100%;
   max-width: 320px;
 }
 
 .seat {
-  padding: 15px 10px;
+  padding: 15px 5px; 
   text-align: center;
   border-radius: 8px;
   font-weight: 600;
@@ -124,6 +149,9 @@ h1, h2, h3 {
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   border: 2px solid transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .seat.free { 
@@ -148,18 +176,20 @@ h1, h2, h3 {
   color: #c62828; 
   border-color: #ffcdd2; 
   cursor: not-allowed; 
-  opacity: 0.6; 
+  opacity: 0.4; 
 }
 
 /* Форма бронювання */
 .booking-form {
   background: white;
-  padding: 30px;
+  padding: 25px 20px;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.05);
   border: 1px solid #eaeaea;
   flex: 1;
-  min-width: 300px;
+  min-width: 280px; 
+  max-width: 500px;
+  box-sizing: border-box; 
 }
 
 .form-input {
@@ -169,7 +199,7 @@ h1, h2, h3 {
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 15px;
-  box-sizing: border-box;
+  box-sizing: border-box; /* Гарантує, що інпути не вилазять з форми */
   transition: border-color 0.2s;
 }
 
@@ -185,4 +215,20 @@ h1, h2, h3 {
   border-radius: 8px;
   margin-bottom: 20px;
   border-left: 4px solid var(--primary);
+}
+
+/*для ПК*/
+@media (min-width: 768px) {
+  .booking-layout {
+    justify-content: flex-start; /* На ПК притискаємо все до лівого краю */
+    gap: 50px; /* Робимо трохи більший відступ між місцями і формою */
+  }
+  
+  .seat-map-wrapper {
+    align-items: flex-start; /* На ПК вирівнюємо сітку місць по лівому краю */
+  }
+  
+  .booking-form {
+    padding: 30px; /* На ПК можна зробити відступи у формі трохи більшими */
+  }
 }
