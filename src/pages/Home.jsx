@@ -2,26 +2,25 @@ import { useState } from 'react';
 import { trains } from '../data/trains';
 import TrainList from '../components/TrainList';
 
-export function Home() {
-    const [search, setSearch] = useState('');
+export default function Home() {
+  const [search, setSearch] = useState('');
 
-    const filteredTrains = trains.filter(train =>
-        train.route.toLowerCasw().includes(search.toLowerCase()) ||
-        train.number.toLowerCase().includes(search.toLowerCase())
-    );
+  const filteredTrains = trains.filter(train => 
+    train.route.toLowerCase().includes(search.toLowerCase()) || 
+    train.number.toLowerCase().includes(search.toLowerCase())
+  );
 
-    return (
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-            <h1>Пошук рейсів</h1>
-            <input
-                type="text"
-                placeholder="Пошук за маршрутом або номером..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-               style={{ padding: '10px', width: '100%', marginBottom: '20px', borderRadius: '5px', border: '1px solid #ccc' }}
-            />
-            
-          <TrainList trains={filteredTrains}/>
-        </div>
-    );
+  return (
+    <div className="container">
+      <h2>Розклад потягів Укрзалізниці 🚆</h2>
+      <input 
+        type="text" 
+        className="search-input"
+        placeholder="Пошук за маршрутом (наприклад: Київ) або номером..." 
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      <TrainList trains={filteredTrains} /> 
+    </div>
+  );
 }
