@@ -1,60 +1,88 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import SeatMap from '../components/SeatMap';
 import WagonSelector from '../components/WagonSelector';
 import BookingForm from '../components/BookingForm';
-import { BookingService } from '../service/BookingService';
+import { BookingService } from '../services/BookingService';
+import { BookingContext } from '../context/BookingContext';
 
 export default function Booking() {
   const { trainId } = useParams();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Хук для навігації
   
-  // Стани
-  const [selectedWagon, setSelectedWagon] = useState(1);
-  const [selectedSeats, setSelectedSeats] = useState([]);
+  const { 
+    trains,
+    currentWagon, 
+    setCurrentWagon, 
+    selectedSeats, 
+    setSelectedSeats 
+  } = useContext(BookingContext);
+
   const [bookedSeats, setBookedSeats] = useState([]);
- 
+  const [fetchingSeats, setFetchingSeats] = useState(false);
 
-  // Завантаження броні з LocalStorage для конкретного потяга і вагона
+  const train = trains.find(t => t.id === parseInt(trainId));
+
   useEffect(() => {
-    const existingBookings = BookingService.getBookedSeats(trainId, selectedWagon);
-    setBookedSeats(existingBookings);
-    setSelectedSeats([]); // Очищаємо обрані місця, якщо користувач перемкнув вагон
-  }, [trainId, selectedWagon]);
+    setFetchingSeats(true);
+    BookingService.getBookedSeats(trainId, currentWagon)
+      .then(seats => {
+        setBookedSeats(seats);
+        setSelectedSeats([]); 
+      })
+      .catch(() => toast.error("Помилка синхронізації з API"))
+      .finally(() => setFetchingSeats(false));
+  }, [trainId, currentWagon, setSelectedSeats]);
 
-  // Функція обробки форми бронювання
-  const handleFinalizeBooking = (formData) => {
+  const handleFinalizeBooking = async (formData) => {
     if (selectedSeats.length === 0) {
-      toast.error("Оберіть хоча б одне місце!");
+      toast.error("Оберіть хоча б одне місце на схемі!");
       return;
     }
     
-    // Збереження бронювання
-    BookingService.saveBooking(trainId, selectedWagon, selectedSeats);
-    
-    toast.success(`Квитки успішно заброньовані для ${formData.name}!`);
-    navigate('/'); // Повертаємо на головну сторінку
+    try {
+      await BookingService.saveBooking(trainId, currentWagon, selectedSeats);
+      toast.success(`Квитки успішно заброньовані для ${formData.name}!`);
+      setSelectedSeats([]); 
+      navigate('/');
+    } catch {
+      toast.error("Не вдалося зберегти бронювання.");
+    }
   };
 
- return (
-    <div className="container" style={{ padding: '20px', maxWidth: '900px', margin: '0 auto' }}>
-      <h2>Бронювання квитків (Рейс ID: {trainId})</h2>
-      
-      <WagonSelector selectedWagon={selectedWagon} setSelectedWagon={setSelectedWagon} />
+  if (!train) return <div className="container"><h3>Рейс оновлюється або не знайдений...</h3></div>;
 
-      <div style={{ display: 'flex', gap: '50px', flexWrap: 'wrap' }}>
-        <div>
-          <h3>Оберіть місця (Вагон {selectedWagon})</h3>
-          <SeatMap 
-            selectedSeats={selectedSeats} 
-            setSelectedSeats={setSelectedSeats} 
-            bookedSeats={bookedSeats} 
-          />
+  return (
+    <div className="container">
+      {/* Кнопка повернення */}
+      <button className="btn-back" onClick={() => navigate('/')}>
+        ← Повернутися до списку
+      </button>
+
+      <h2 style={{ marginTop: '10px' }}>Оформлення: Потяг {train.number} ({train.route}) 🎫</h2>
+      
+      <WagonSelector selectedWagon={currentWagon} setSelectedWagon={setCurrentWagon} />
+
+      <div className="booking-layout">
+        {/* Контейнер для центрування схеми вагону */}
+        <div className="seat-map-wrapper">
+          <h3 style={{ marginTop: 0, textAlign: 'center' }}>Схема вагону №{currentWagon}</h3>
+          {fetchingSeats ? (
+            <p style={{ textAlign: 'center' }}>Оновлення схеми...</p>
+          ) : (
+            <SeatMap 
+              selectedSeats={selectedSeats} 
+              setSelectedSeats={setSelectedSeats} 
+              bookedSeats={bookedSeats} 
+            />
+          )}
         </div>
         
-        {/* Використовуємо відокремлений компонент форми */}
-        <BookingForm selectedSeats={selectedSeats} onSubmitBooking={handleFinalizeBooking} />
+        <BookingForm 
+          selectedSeats={selectedSeats} 
+          onSubmitBooking={handleFinalizeBooking} 
+        />
       </div>
     </div>
   );
