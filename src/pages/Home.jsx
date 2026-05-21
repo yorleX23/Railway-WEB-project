@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <div className="container">
-      <h2>Розклад потягів Укрзалізниці 🚆</h2>
+      <h2>Розклад потягів 🚆</h2>
       <input 
         type="text" 
         className="search-input"
