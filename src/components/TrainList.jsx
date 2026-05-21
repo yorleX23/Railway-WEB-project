@@ -1,7 +1,7 @@
 import TrainCard from "./TrainCard";
 
 export default function TrainList({ trains }) {
-    if(trains.length ===0) {
+    if(trains.length === 0) {
         return <p>Рейсів не знайдено</p>
     }
 
