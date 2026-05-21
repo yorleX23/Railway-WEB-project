@@ -80,7 +80,7 @@ h1, h2, h3 {
   color: var(--text-muted);
 }
 
-/* Кнопки */
+/* оновлено стилі кнопок */
 .btn-primary {
   background-color: var(--primary);
   color: white;
@@ -99,4 +99,90 @@ h1, h2, h3 {
   background-color: var(--primary-hover);
 }
 
-/* оновлено стилі кнопок */
+/* Контейнер сторінки бронювання */
+.booking-layout {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* Карта місць */
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 320px;
+}
+
+.seat {
+  padding: 15px 10px;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid transparent;
+}
+
+.seat.free { 
+  background-color: #e8f5e9; 
+  color: #2e7d32; 
+  border-color: #c8e6c9; 
+}
+.seat.free:hover { 
+  background-color: #c8e6c9; 
+  transform: translateY(-2px);
+}
+
+.seat.selected { 
+  background-color: #0056b3; 
+  color: white; 
+  transform: scale(1.05); 
+  box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3); 
+}
+
+.seat.booked { 
+  background-color: #ffebee; 
+  color: #c62828; 
+  border-color: #ffcdd2; 
+  cursor: not-allowed; 
+  opacity: 0.6; 
+}
+
+/* Форма бронювання */
+.booking-form {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  border: 1px solid #eaeaea;
+  flex: 1;
+  min-width: 300px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus { 
+  border-color: var(--primary); 
+  outline: none; 
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+}
+
+.summary-box {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid var(--primary);
+}
